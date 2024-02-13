@@ -1,6 +1,6 @@
 package exercise;
 
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public  class App {
         for (var sw: characters.toLowerCase().toCharArray()) {
             charArrays.add(sw);
         }
-        for (var ch: listCharactersOfWord){
+        for (var ch: listCharactersOfWord) {
             if (!charArrays.contains(ch)) {
                 return false;
             }
