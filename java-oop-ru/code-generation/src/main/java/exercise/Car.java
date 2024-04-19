@@ -17,11 +17,13 @@ class Car {
     // BEGIN
     @SneakyThrows
     public String serialize() {
-        return new ObjectMapper().writeValueAsString(this);
+        var result = new ObjectMapper().writeValueAsString(this);
+        return result;
     }
     @SneakyThrows
     public static Car unserialize(String jsonData) {
-        return new ObjectMapper().readValue(jsonData, Car.class);
+        var result = new ObjectMapper().readValue(jsonData, Car.class);
+        return result;
     }
     // END
 }
