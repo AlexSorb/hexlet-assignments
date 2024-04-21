@@ -10,7 +10,7 @@ import java.nio.file.StandardOpenOption;
 public class App {
     @SneakyThrows
     public static void save(Path pathOfFile, Car car) {
-        Files.writeString(pathOfFile, car.serialize(), StandardOpenOption.APPEND);
+        Files.writeString(pathOfFile, car.serialize());
     }
     @SneakyThrows
     public static Car extract(Path pathOfFile) {
