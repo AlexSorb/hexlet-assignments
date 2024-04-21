@@ -1,19 +1,18 @@
 package exercise;
 
-import lombok.SneakyThrows;
-
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
 // BEGIN
 public class App {
-    @SneakyThrows
-    public static void save(Path pathOfFile, Car car) {
+
+    public static void save(Path pathOfFile, Car car) throws IOException {
         Files.writeString(pathOfFile, car.serialize(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
-    @SneakyThrows
-    public static Car extract(Path pathOfFile) {
+
+    public static Car extract(Path pathOfFile) throws IOException {
         var data = Files.readString(pathOfFile);
         return Car.unserialize(data);
     }
