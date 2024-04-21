@@ -1,8 +1,11 @@
 package exercise;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.SneakyThrows;
 import lombok.Value;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
 
 // BEGIN
 @Value
@@ -15,14 +18,24 @@ class Car {
     User owner;
 
     // BEGIN
-    @SneakyThrows
+
     public String serialize() {
-        var result = new ObjectMapper().writeValueAsString(this);
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         return result;
     }
-    @SneakyThrows
+
     public static Car unserialize(String jsonData) {
-        var result = new ObjectMapper().readValue(jsonData, Car.class);
+        Car result = null;
+        try {
+            result = new ObjectMapper().readValue(jsonData, Car.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return result;
     }
     // END
