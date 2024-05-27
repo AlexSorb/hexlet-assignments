@@ -11,8 +11,8 @@ public final class App {
             javalinConfig.bundledPlugins.enableDevLogging();
         });
 
-        app.get("/phones", ctx -> ctx.json(Data.getPhones().toString()));
-        app.get("/domains", ctx -> ctx.json(Data.getDomains().toString()));
+        app.get("/phones", ctx -> ctx.json(Data.getPhones()));
+        app.get("/domains", ctx -> ctx.json(Data.getDomains()));
 
         return app;
         // END
