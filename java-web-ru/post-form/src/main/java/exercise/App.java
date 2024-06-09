@@ -35,22 +35,13 @@ public final class App {
         });
 
         app.post("/users", ctx->{
-            var firstName = ctx.formParam("firstName");
-            var lastName = ctx.formParam("lastName");
-            var email = ctx.formParam("email");
-            var password = ctx.formParam("password");
-
+            var firstName = StringUtils.capitalize(ctx.formParam("firstName"));
+            var lastName = StringUtils.capitalize(ctx.formParam("lastName"));
+            var email = StringUtils.lowerCase(ctx.formParam("email")).trim();
+            var password = Security.encrypt(ctx.formParam("password"));
 
             if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName) &&
                     !StringUtils.isEmpty(email) && !StringUtils.isEmpty(password)) {
-                firstName = StringUtils.lowerCase(firstName);
-                lastName = StringUtils.lowerCase(lastName);
-                email = StringUtils.lowerCase(email).trim();
-
-                firstName = StringUtils.capitalize(firstName);
-                lastName = StringUtils.capitalize(lastName);
-                password = Security.encrypt(password);
-
                 var newUser = new User(firstName, lastName, email, password);
                 UserRepository.save(newUser);
             }
