@@ -18,7 +18,7 @@ public final class App {
         app.get(NamedRoutes.rootPath(), RootController::index);
 
         // BEGIN
-        app.get(NamedRoutes.indexPostPath(), PostsController::index);
+        app.get(NamedRoutes.postsPath(), PostsController::index);
         app.get(NamedRoutes.showPostPath("{id}"), PostsController::show);
         // END
 

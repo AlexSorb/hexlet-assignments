@@ -21,15 +21,22 @@ public class PostsController {
 
     public static void index(Context ctx) {
 
-        int pag = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
+        var posts = PostRepository.getEntities();
+        int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
+
+        if (page < 1) {
+            page = 1;
+        } else if (page > posts.size()) {
+            page = posts.size();
+        }
         int rowsPerPage = 5;
-        var start = pag * rowsPerPage - rowsPerPage;
+
+        var start = page * rowsPerPage - rowsPerPage;
         var end = start + rowsPerPage;
 
 
-        var posts = PostRepository.getEntities();
-        var page = new PostsPage(posts.subList(start, end));
-        ctx.render("posts/index.jte", model("page", page));
+        var currentPostsPage = new PostsPage(posts.subList(start, end), page);
+        ctx.render("posts/index.jte", model("currentPostsPage", currentPostsPage));
     }
     // END
 }

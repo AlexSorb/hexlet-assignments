@@ -19,7 +19,7 @@ content = @`
             </p>
         </div>
         <div>
-            <a href="${NamedRoutes.indexPostPath()}">Все посты</a>
+            <a href="${NamedRoutes.postsPath()}">Все посты</a>
         </div>
     </div>
 `)

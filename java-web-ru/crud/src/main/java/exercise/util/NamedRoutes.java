@@ -11,9 +11,6 @@ public class NamedRoutes {
         return "/posts/" + id;
     }
 
-    public static String indexPostPath() {
-        return "/posts";
-    }
     public static String postsPath() {
         return "/posts";
     }
