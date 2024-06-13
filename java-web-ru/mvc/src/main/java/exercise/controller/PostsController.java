@@ -12,6 +12,7 @@ import exercise.util.NamedRoutes;
 import io.javalin.http.Context;
 import io.javalin.validation.ValidationException;
 import io.javalin.http.NotFoundResponse;
+import jdk.javadoc.doclet.Reporter;
 
 public class PostsController {
 
@@ -61,14 +62,38 @@ public class PostsController {
     public static void edit(Context ctx) {
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var editingPost = PostRepository.find(id).orElseThrow(() -> new NotFoundResponse("Пост не найден"));
-        var title = editingPost.getName();
+
+        var name = editingPost.getName();
         var body = editingPost.getBody();
-        var page =new EditPostPage(title, body, null);
-        ctx.render(NamedRoutes.editPostPath(id), model("page", page));
+
+        var page = new EditPostPage(id, name, body, null);
+        ctx.render("posts/edit.jte", model("page", page));
     }
 
     public static void update(Context ctx) {
+        try {
+            var id = ctx.pathParamAsClass("id", Long.class).get();
 
+            var name = ctx.formParamAsClass("name", String.class)
+                    .check(value -> value.length() >= 2, "Название не должно быть короче двух символов")
+                    .get();
+
+            var body = ctx.formParamAsClass("body", String.class)
+                    .check(value -> value.length() >= 10, "Пост должен быть не короче 10 символов")
+                    .get();
+            var changingPost = PostRepository.find(id).orElseThrow(() -> new NotFoundResponse("Пост не найден"));
+
+            changingPost.setName(name);
+            changingPost.setBody(body);
+            ctx.redirect(NamedRoutes.postsPath());
+
+        } catch (ValidationException exception) {
+            var id = ctx.pathParamAsClass("id", Long.class).get();
+            var name = ctx.formParam("name");
+            var body = ctx.formParam("body");
+            var page = new EditPostPage(id, name, body, exception.getErrors());
+            ctx.render("posts/edit.jte", model("page", page)).status(422);
+        }
     }
     // END
 }
