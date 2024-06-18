@@ -26,16 +26,25 @@ public class PostsController {
                     .get();
             var body = ctx.formParam("body");
 
+            var newPost = new Post(name, body);
+            PostRepository.save(newPost);
+            ctx.sessionAttribute("flash", "Пост был успешно создан!");
+
+            ctx.redirect(NamedRoutes.postsPath());
 
         } catch (ValidationException exception) {
             var name = ctx.formParam("name");
             var body = ctx.formParam("body");
+            var page = new BuildPostPage(name, body, exception.getErrors());
+            ctx.render(NamedRoutes.buildPostPath(), model("page", page)).status(422);
 
         }
     }
 
     public static void index(Context ctx) {
-
+        var posts = PostRepository.getEntities();
+        var page = new PostsPage(posts);
+        page.setFlash(ctx.consumeSessionAttribute("flash"));
     }
     // END
 
