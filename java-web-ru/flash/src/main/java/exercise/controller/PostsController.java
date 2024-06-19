@@ -45,6 +45,7 @@ public class PostsController {
         var posts = PostRepository.getEntities();
         var page = new PostsPage(posts);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
+        ctx.render("posts/index.jte", model("page", page));
     }
     // END
 

@@ -3,7 +3,7 @@
 @param PostsPage page
 
 @template.layout.page(
-    page = page.getFlash(),
+    page = page,
     content = @`
         <div class="index_block">
             @for(var post : page.getPosts())
