@@ -12,12 +12,7 @@ public class Application {
         for (Method method : Address.class.getDeclaredMethods()) {
             if (method.isAnnotationPresent(Inspect.class)) {
                 var methodName = method.getName();
-                var methodReturnType = method.getReturnType().getName();
-
-                if (methodReturnType.contains(".")) {
-                    var buff = methodReturnType.split("\\.");
-                    methodReturnType = buff[buff.length - 1];
-                }
+                var methodReturnType = method.getReturnType().getSimpleName();
 
                 String template = "Method %s returns a value of type %s";
                 System.out.println(String.format(template, methodName,methodReturnType));
