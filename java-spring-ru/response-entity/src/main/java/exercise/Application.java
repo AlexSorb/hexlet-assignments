@@ -55,16 +55,17 @@ public class Application {
         var mayPost = posts.stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
+        HttpStatus status = HttpStatus.NO_CONTENT;
         if (mayPost.isPresent()) {
             var post = mayPost.get();
             post.setId(date.getId());
             post.setTitle(date.getTitle());
             post.setBody(date.getBody());
-        } else {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(date);
+            status = HttpStatus.OK;
         }
 
-        return ResponseEntity.ok(date);
+        return ResponseEntity.status(status)
+                .body(date);
     }
 
     // END
