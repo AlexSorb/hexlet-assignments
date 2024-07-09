@@ -1,0 +1,9 @@
+---
+
+# BEGIN
+spring:
+  jpa:
+    show-sql: true # Включате показ логов
+    hibernate:
+      ddl-auto: update
+# END
