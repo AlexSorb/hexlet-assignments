@@ -8,16 +8,16 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import lombok.Getter;
 import lombok.Setter;
 
-// BEGIN
 @Entity
-@Table(name = "persons")
+@Table(name = "products")
 @Getter
 @Setter
-public class Person {
+public class Product {
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private Long id;
-    private String firstName;
-    private String lastName;
+    private long id;
+
+    private String title;
+    private int price;
 }
-// END
