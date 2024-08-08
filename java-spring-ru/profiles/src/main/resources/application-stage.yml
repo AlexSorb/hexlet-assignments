@@ -1,0 +1,6 @@
+# BEGIN
+stage:
+  url: jdbc:h2:file:./test
+  username: admin
+  password: admin
+# END
