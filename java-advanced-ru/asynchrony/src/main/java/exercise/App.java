@@ -2,6 +2,7 @@ package exercise;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.Arrays;
@@ -17,69 +18,66 @@ class App {
     // BEGIN
     public static CompletableFuture<String> unionFiles(String file1, String file2, String dest) {
         // Прелбразовать STRING в Path
-        var pathFile1 = Paths.get(file1).toAbsolutePath().toFile();
-        var pathFile2 = Paths.get(file2).toAbsolutePath().toFile();
+        var pathFile1 = Paths.get(file1).toAbsolutePath().normalize().toFile();
+        var pathFile2 = Paths.get(file2).toAbsolutePath().normalize().toFile();
 
         //  Проверить существует ли file1 и file2
         // Выкинуть ошибку если не найдены файлы
 
         if (pathFile1.exists() && pathFile2.exists()) {
-
-            try {
                 // Прочитать данныее из файлов
-
-                System.out.println("Reading file " + pathFile1.getName());
-                CompletableFuture<List<String>> futureFile1 = CompletableFuture.supplyAsync(() -> {
-                    List<String> linesFile1;
-                    try {
-                        linesFile1 = Files.readAllLines(pathFile1.toPath());
-                    } catch (Exception e) {
-                        throw new IllegalStateException(e);
-                    }
-                    return linesFile1;
-                });
-
-                System.out.println("Reading file " + pathFile2.getName());
-                CompletableFuture<List<String>> futureFile2 = CompletableFuture.supplyAsync(() -> {
-                    List<String> linesFile2;
-                    try {
-                        linesFile2 = Files.readAllLines(pathFile1.toPath());
-                    } catch (Exception e) {
-                        throw new IllegalStateException(e);
-                    }
-                    return linesFile2;
-                });
-
+            System.out.println("Reading file " + pathFile1.getName());
+            CompletableFuture<List<String>> futureFile1 = CompletableFuture.supplyAsync(() -> {
+                List<String> linesFile1;
                 try {
-                    var f1 = futureFile1.get();
-                    var f2 = futureFile1.get();
+                    linesFile1 = Files.readAllLines(pathFile1.toPath());
+                } catch (Exception e) {
+                    throw new IllegalStateException(e);
+                }
+                return linesFile1;
+            });
 
+            System.out.println("Reading file " + pathFile2.getName());
+            CompletableFuture<List<String>> futureFile2 = CompletableFuture.supplyAsync(() -> {
+                List<String> linesFile2;
+                try {
+                    linesFile2 = Files.readAllLines(pathFile2.toPath());
+                } catch (Exception e) {
+                    throw new IllegalStateException(e);
+                }
+                return linesFile2;
+            });
+
+
+            CompletableFuture<String> writeToFile = futureFile1.thenCombine(futureFile2, (dataFile1, dataFile2) -> {
+                List<String> result = new ArrayList<>();
+                result.addAll(dataFile1);
+                result.addAll(dataFile2);
+
+                // Если нет - создать файл
+                try {
                     // Если нет - создать файл
-                    var result = Paths.get(dest).toAbsolutePath();
-                    if (!result.toFile().exists()) {
-                        boolean newFile = result.toFile().createNewFile();
+                    var writePath = Paths.get(dest).toAbsolutePath();
+                    if (!writePath.toFile().exists()) {
+                        writePath.toFile().createNewFile();
                     }
-                    // Записать данные в файл
-                    Files.write(result, f1, StandardOpenOption.APPEND);
-                    Files.write(result, f2, StandardOpenOption.APPEND);
-
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                } catch (ExecutionException e) {
+                    Files.write(writePath, result);
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+                return result.toString();
+            });
+            return writeToFile;
+
 
         } else {
             System.out.println("NoSuchFileException");
-            return null;
+            return CompletableFuture.supplyAsync(() -> {
+                return "NoSuchFileException";
+            });
         }
 
-        // Прописать мультитрейдинг
-        return null;
     }
     // END
 
